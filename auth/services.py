@@ -23,7 +23,7 @@ def generate_tokens(user):
         "user":{
             "id":user.uuid,
             "email":user.email,
-            "status":user.status.value
+            "status":user.status
         }
     }
 
@@ -57,7 +57,7 @@ def signup(data):
         first_name=data["first_name"],
         last_name=data["last_name"],
         phone=data.get("phone"),
-        status=UserStatus.ACTIVE
+        status=UserStatus.ACTIVE.value
     )
     
     db.session.add(user)
@@ -74,10 +74,10 @@ def login_user (data):
     email= data['email']
     password=data['password']
 
-    db_user=User.query.filter_by(email=email).filter(User.status.in_([UserStatus.ACTIVE, UserStatus.PENDING_EMAIL_VERIFICATION])).first()
+    db_user=User.query.filter_by(email=email).filter(User.status.in_([item.value for item in UserStatus])).first()
     if not db_user:
         raise ValueError("Invalid email or password")
-    elif db_user.status==UserStatus.PENDING_EMAIL_VERIFICATION:
+    elif db_user.status==UserStatus.PENDING_EMAIL_VERIFICATION.value:
         raise ValueError("User account not verified please verify you account to login")
     db_password=db_user.password_hash
     
@@ -113,7 +113,7 @@ def verify_user_email(token: str):
         )
 
     user.email_verified = True
-    user.status = UserStatus.ACTIVE
+    user.status = UserStatus.ACTIVE.value
 
     db.session.commit()
 

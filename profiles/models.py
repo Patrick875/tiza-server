@@ -7,6 +7,17 @@ class Profile (BaseModel):
     id=db.Column(db.Integer,primary_key=True)
     uuid=db.Column(db.UUID(as_uuid=True),default=uuid4,unique=True)
 
+    bio=db.Column(db.String(500))
+    location=db.Column(db.String(255))
+    website=db.Column(db.String(255))
+    profile_picture=db.Column(db.String(500))
+    theme=db.Column(db.String(50),default="light")
+    whatsapp=db.Column(db.String(20))
+    telegram=db.Column(db.String(20))
+    twitter=db.Column(db.String(20))
+    instagram=db.Column(db.String(20))
+    facebook=db.Column(db.String(20))
+
     #other props
 
     #relations

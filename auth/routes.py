@@ -43,7 +43,6 @@ def register():
             status_code=400
         )
         
-
 @auth_bp.route('/login',methods=['POST'])
 def login():
     try:
@@ -70,7 +69,7 @@ def login():
         return api_response(
             success=False,
             message=str(error),
-            status_code=401,
+            status_code=400,
         )
     
 @auth_bp.route('/refresh-token',methods=['POST'])

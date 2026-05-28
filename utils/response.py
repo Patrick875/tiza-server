@@ -6,14 +6,16 @@ def api_response(
     message="",
     data=None,
     errors=None,
-    status_code=200
+    status_code=200,
+    meta_info={}
 ):
     response=jsonify({
         "success": success,
         "message": message,
         "data": data,
         "errors": errors,
-        "timeStamp": datetime.now(timezone.utc).isoformat()
+        "timeStamp": datetime.now(timezone.utc).isoformat(),
+        "meta_info":meta_info
     })
 
     response.status_code=status_code

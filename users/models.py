@@ -23,7 +23,7 @@ class User (BaseModel):
     phone=db.Column(db.String(),nullable=True)
 
     email_verified=db.Column(db.Boolean,default=False)
-    status=db.Column(db.Enum(UserStatus),default=UserStatus.PENDING_EMAIL_VERIFICATION)
+    status=db.Column(db.String(50),default=UserStatus.PENDING_EMAIL_VERIFICATION.value)
 
     #relations
 
@@ -38,10 +38,10 @@ class User (BaseModel):
         back_populates='user',
         uselist=False,
         cascade='all,delete-orphan'
-        )
+    )
     listings=db.relationship(
         "Listing",
-        back_populates='user',
+        back_populates='lessor',
         cascade='all,delete-orphan'
     )
     rentals=db.relationship(
@@ -58,6 +58,16 @@ class User (BaseModel):
         'Cart',
         back_populates='user',
         uselist=False,
+        cascade='all,delete-orphan'
+    )
+    reviews=db.relationship(
+        'Review',
+        back_populates='reviewer',
+        cascade='all,delete-orphan'
+    )
+    payments=db.relationship(
+        'Payment',
+        back_populates='user',
         cascade='all,delete-orphan'
     )
 

@@ -1,12 +1,11 @@
 from extensions import db
-from utils.BaseModel import BaseModel
+from database.BaseModel import BaseModel
 from uuid import uuid4
 
 
 class CartItem(BaseModel):
     __tablename__='cart_items'
-    id=db.Column(db.Integer,primary_key=True)
-    uuid=db.Column(db.UUID(as_uuid=True),default=uuid4,unique=True)
+   
     quantity=db.Column(db.Integer,default=1)
     price=db.Column(db.Float,nullable=False)
 
@@ -19,9 +18,7 @@ class CartItem(BaseModel):
 
 class Cart (BaseModel):
     __tablename__='carts'
-    id=db.Column(db.Integer,primary_key=True)
-    uuid=db.Column(db.UUID(as_uuid=True),default=uuid4,unique=True)
-
+   
     #other props
     total_amount=db.Column(db.Float,default=0.0)
     total_items=db.Column(db.Integer,default=0)

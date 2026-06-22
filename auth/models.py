@@ -1,5 +1,5 @@
 from extensions import db
-from utils.BaseModel import BaseModel
+from database.BaseModel import BaseModel
 from uuid import uuid4
 
 #associations
@@ -17,11 +17,9 @@ role_permissions = db.Table(
 
 class Role(BaseModel):
     __tablename__='roles'
-    
-    id=db.Column(db.Integer,primary_key=True,nullable=False)
-    uuid=db.Column(db.UUID(as_uuid=True),unique=True,default=uuid4)
     name=db.Column(db.String(100),unique=True,nullable=False)
-
+    display_name=db.Column(db.String(100),unique=True)
+    description=db.Column(db.String(100))
     #relationships
     users=db.relationship(
         'User',
@@ -33,14 +31,14 @@ class Role(BaseModel):
         secondary=role_permissions,
         back_populates='roles'
     )
-
+    def has_permission(self, permission_name):
+         return any(p.name==permission_name for p in self.permissions)
+    def __repr__(self):
+        return f'<Role {self.name}>'
 
 class Permission(BaseModel):
      __tablename__='permissions'
-     id=db.Column(db.Integer,primary_key=True,nullable=False)
-     uuid=db.Column(db.UUID(as_uuid=True),unique=True,default=uuid4)
      name=db.Column(db.String(100),unique=True,nullable=False)
- 
      #relationships
      roles=db.relationship(
          'Role',

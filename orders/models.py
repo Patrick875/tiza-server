@@ -1,5 +1,5 @@
 from extensions import db
-from utils.BaseModel import BaseModel
+from database.BaseModel import BaseModel
 from uuid import uuid4
 from enum import Enum
 
@@ -12,8 +12,7 @@ class OrderStatus(Enum):
 
 class OrderItem(BaseModel):
     __tablename__='order_items'
-    id=db.Column(db.Integer,primary_key=True)
-    uuid=db.Column(db.UUID(as_uuid=True),default=uuid4,unique=True)
+    
     quantity=db.Column(db.Integer,nullable=False)
     price=db.Column(db.Float,nullable=False)
 
@@ -26,8 +25,7 @@ class OrderItem(BaseModel):
 
 class Order (BaseModel):
     __tablename__='orders'
-    id=db.Column(db.Integer,primary_key=True)
-    uuid=db.Column(db.UUID(as_uuid=True),default=uuid4,unique=True)
+    
     status=db.Column(db.String(50),default=OrderStatus.PENDING,nullable=False)
     total_amount=db.Column(db.Float,nullable=False)
 

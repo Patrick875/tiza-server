@@ -1,5 +1,5 @@
 from extensions import db
-from utils.BaseModel import BaseModel
+from database.BaseModel import BaseModel
 from uuid import uuid4
 from enum import Enum
 from sqlalchemy.dialects.postgresql import ARRAY
@@ -29,9 +29,6 @@ class CancelationPolicy(Enum):
 
 class Listing (BaseModel):
     __tablename__='listings'
-
-    id=db.Column(db.Integer,primary_key=True)
-    uuid=db.Column(db.UUID(as_uuid=True),default=uuid4,unique=True)
     name=db.Column(db.String(255),nullable=False)
     description=db.Column(db.String())
     listing_verification=db.Column(db.String(),default=ListingVerification.PENDING.value)

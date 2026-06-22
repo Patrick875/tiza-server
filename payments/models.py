@@ -1,6 +1,6 @@
 from extensions import db
 from extensions import db
-from utils.BaseModel import BaseModel
+from database.BaseModel import BaseModel
 from uuid import uuid4
 from enum import Enum
 
@@ -13,8 +13,7 @@ class PaymentStatus(Enum):
 
 class Payment(BaseModel):
     __tablename__='payments'
-    id=db.Column(db.Integer,primary_key=True)
-    uuid=db.Column(db.UUID(as_uuid=True),default=uuid4,unique=True)
+    
     amount=db.Column(db.Float,nullable=False)
     status=db.Column(db.String(50),default=PaymentStatus.PENDING.value,nullable=False)
     order_id=db.Column(db.Integer,db.ForeignKey('orders.id'),nullable=False)

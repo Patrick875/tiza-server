@@ -5,6 +5,7 @@ load_dotenv()
 
 class Config():
     SECRET_KEY=os.getenv('SECRET_KEY')
+    FRONTEND_BASE=os.getenv('FRONTEND_BASE')
     SQLALCHEMY_DATABASE_URI=os.getenv('SQLALCHEMY_DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS=False
     JWT_SECRET_KEY=os.getenv('JWT_SECRET_KEY')

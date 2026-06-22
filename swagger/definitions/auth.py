@@ -1,0 +1,13 @@
+auth_definitions={
+    "UserSignup":{
+        "type":"object",
+        "required":["first_name","last_name","email","password"],
+        "properties":{
+            "first_name":{"type":"string","example":"john"},
+            "last_name":{"type":"string","example":"doe"},
+            "phone":{"type":"string","example":"+250780123456"},
+            "email":{"type":"string","example":"email@example.com"},
+            "password":{"type":"string","example":"Secret@123"},
+        }
+    }
+}

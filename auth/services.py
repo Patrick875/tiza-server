@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash,check_password_hash,gen_sal
 from flask_jwt_extended import create_access_token,create_refresh_token
 from datetime import timedelta
 from users.models import User,UserStatus
+from auth.models import Role
 from itsdangerous import URLSafeTimedSerializer
 from flask import current_app
 from utils.response import api_response
@@ -23,6 +24,7 @@ def generate_tokens(user):
         "user":{
             "id":user.uuid,
             "email":user.email,
+            "full_name":f"{user.first_name} {user.last_name}",
             "status":user.status
         }
     }
@@ -59,7 +61,9 @@ def signup(data):
         phone=data.get("phone"),
         status=UserStatus.ACTIVE.value
     )
-    
+    renter_role= Role.query.filter_by(name='renter').first()
+    user.roles.append(renter_role)
+
     db.session.add(user)
     db.session.commit()
 

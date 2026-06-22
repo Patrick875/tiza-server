@@ -1,12 +1,10 @@
 from extensions import db
-from utils.BaseModel import BaseModel
+from database.BaseModel import BaseModel
 from uuid import uuid4
 
 class Profile (BaseModel):
     __tablename__='profiles'
-    id=db.Column(db.Integer,primary_key=True)
-    uuid=db.Column(db.UUID(as_uuid=True),default=uuid4,unique=True)
-
+   
     bio=db.Column(db.String(500))
     location=db.Column(db.String(255))
     website=db.Column(db.String(255))

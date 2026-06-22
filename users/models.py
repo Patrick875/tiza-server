@@ -1,5 +1,5 @@
 from extensions import db
-from utils.BaseModel import BaseModel
+from database.BaseModel import BaseModel
 from uuid import uuid4
 from auth.models import user_roles
 from enum import Enum
@@ -12,8 +12,6 @@ class UserStatus(Enum):
 
 class User (BaseModel):
     __tablename__='users'
-    id=db.Column(db.Integer,primary_key=True)
-    uuid=db.Column(db.UUID(as_uuid=True),default=uuid4,unique=True)
 
     email=db.Column(db.String(255),unique=True,nullable=False)
     password_hash=db.Column(db.String(255),nullable=False)
@@ -70,5 +68,32 @@ class User (BaseModel):
         back_populates='user',
         cascade='all,delete-orphan'
     )
+
+
+    def to_dict(self):
+        return {
+            "id":self.id,
+            "email":self.email,
+            "first_name":self.first_name,
+            "last_name":self.last_name,
+            "full_name":f"{self.first_name} {self.last_name}",
+            "roles":[role.name for role in self.roles],
+            "status":self.status
+        }
+    
+    def has_role(self, role_name):
+        return any(r.name==role_name for r in self.roles)
+    def has_permission(self, permission_name):
+        for role in self.roles:
+            if role.has_permission(permission_name):
+                True
+        return False
+    def get_all_permissions(self):
+        permissions=set()
+        for role in self.roles:
+            permissions.update(p.name for p in role.permissions)
+            return permissions
+    def __repr__(self):
+        return f'<User {self.email}>'
 
 

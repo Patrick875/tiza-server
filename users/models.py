@@ -37,6 +37,16 @@ class User (BaseModel):
         uselist=False,
         cascade='all,delete-orphan'
     )
+    rentor_profile=db.relationship(
+        'RentorProfile',
+        back_populates="user",
+        cascade='all,delete-orphan'
+    )
+    lessor_profile=db.relationship(
+        'LessorProfile',
+        back_populates="user",
+        cascade='all,delete-orphan'
+    )
     listings=db.relationship(
         "Listing",
         back_populates='lessor',
@@ -86,13 +96,13 @@ class User (BaseModel):
     def has_permission(self, permission_name):
         for role in self.roles:
             if role.has_permission(permission_name):
-                True
+                return True
         return False
     def get_all_permissions(self):
         permissions=set()
         for role in self.roles:
             permissions.update(p.name for p in role.permissions)
-            return permissions
+        return permissions
     def __repr__(self):
         return f'<User {self.email}>'
 

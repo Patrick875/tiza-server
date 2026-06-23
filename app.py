@@ -4,10 +4,12 @@ from auth.routes import auth_bp
 from users.routes import users_bp
 from listings.routes import listings_bp
 from categories.routes import categories_bp
+from profiles.routes import profiles_bp
 from flasgger import Swagger
 from swagger.swagger_template import swagger_template
 from swagger.config import swagger_config
 from flask_cors import CORS
+from errors.handlers import register_error_handlers
 
 url_prefix = "/api/v1"
 
@@ -29,6 +31,9 @@ def create_app():
     app.register_blueprint(users_bp, url_prefix=url_prefix + "/users")
     app.register_blueprint(listings_bp, url_prefix=url_prefix + "/listings")
     app.register_blueprint(categories_bp, url_prefix=url_prefix + "/categories")
+    app.register_blueprint(profiles_bp,url_prefix=url_prefix+"/profiles")
+
+    register_error_handlers(app)
 
     Swagger(
         app,

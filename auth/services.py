@@ -1,9 +1,11 @@
 from extensions import db
-from werkzeug.security import generate_password_hash,check_password_hash,gen_salt
+from werkzeug.security import generate_password_hash,check_password_hash
+from werkzeug.exceptions import NotFound,BadRequest
 from flask_jwt_extended import create_access_token,create_refresh_token
 from datetime import timedelta
 from users.models import User,UserStatus
 from auth.models import Role
+from profiles.models import Profile
 from itsdangerous import URLSafeTimedSerializer
 from flask import current_app
 from utils.response import api_response
@@ -35,23 +37,18 @@ def generate_verification_token(user_id:int):
 
 def verify_verification_token(token:str,max_age=3600*4):
     serializer = URLSafeTimedSerializer(current_app.config["SECRET_KEY"])
-    try:
-        data = serializer.loads(
+    data = serializer.loads(
             token,
             salt=current_app.config['EMAIL_VERIFICATION_SALT'],
             max_age=max_age
         )
-        return data["user_id"]
-    except Exception:
-        return None
-
-
-
+    return data["user_id"]
+  
 def signup(data):
     alread_exists= User.query.filter_by(email=data['email']).first();
 
     if alread_exists:
-        raise ValueError('Email already exists')
+        raise BadRequest('Email already exists')
     
     user=User(
         email=data['email'],
@@ -74,19 +71,20 @@ def signup(data):
         'first_name':user.first_name,
         'last_name':user.last_name
     }
+
 def login_user (data):
     email= data['email']
     password=data['password']
 
     db_user=User.query.filter_by(email=email).filter(User.status.in_([item.value for item in UserStatus])).first()
     if not db_user:
-        raise ValueError("Invalid email or password")
+        raise BadRequest("Invalid email or password")
     elif db_user.status==UserStatus.PENDING_EMAIL_VERIFICATION.value:
-        raise ValueError("User account not verified please verify you account to login")
+        raise BadRequest("User account not verified please verify you account to login")
     db_password=db_user.password_hash
     
     if not check_password_hash(db_password,password):
-        raise ValueError("Wrong email or password, Please try again")
+        raise BadRequest("Wrong email or password, Please try again")
     return generate_tokens(db_user)
 
 
@@ -99,30 +97,50 @@ def verify_user_email(token: str):
             message="Invalid or expired verification link",
             status_code=400
         )
-
-    user = User.query.get(user_id)
-
-    if not user:
-        return api_response(
-            success=False,
-            message="User not found",
-            status_code=404
+    
+    try:
+        user = User.query.filter_by(id=user_id).first()
+        profile=Profile(
+            bio='',
+            location="",
+            website="",
+            profile_picture="",
+            theme="",
+            whatsapp="",
+            telegram="",
+            twitter="",
+            instagram="",
+            facebook="",
+            user_id=user_id
         )
 
-    if user.email_verified:
+        db.session.add(profile)
+        db.session.commit()
+
+        if not user:
+            raise NotFound("User not found")
+
+        if user.email_verified:
+            return api_response(
+                success=True,
+                message="Email already verified",
+                status_code=200
+            )
+
+        user.email_verified = True
+        user.status = UserStatus.ACTIVE.value
+
+        db.session.commit()
+
         return api_response(
             success=True,
-            message="Email already verified",
+            message="Email verified successfully",
             status_code=200
         )
+    except Exception as e:
+        print(f""" 
+                {str(e)}
+            """)
+        raise ValueError(str(e))
 
-    user.email_verified = True
-    user.status = UserStatus.ACTIVE.value
-
-    db.session.commit()
-
-    return api_response(
-        success=True,
-        message="Email verified successfully",
-        status_code=200
-    )
+    

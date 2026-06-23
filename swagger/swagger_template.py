@@ -1,5 +1,6 @@
 from swagger.definitions.categories import category_definition
 from swagger.definitions.auth import auth_definitions
+from swagger.definitions.profiles import profile_definitions
 
 swagger_template={
     "swagger":"2.0",
@@ -17,6 +18,7 @@ swagger_template={
     },
     "definitions":{
         **category_definition,
-        **auth_definitions
+        **auth_definitions,
+        **profile_definitions
     }
 }

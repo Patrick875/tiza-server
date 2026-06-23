@@ -1,0 +1,54 @@
+profile_definitions={
+    "CreateLessorProfile":{
+        "type":"object",
+        "required":["display_name","business_type","payout_phone"],
+        "properties":{
+            "display_name":{"type":"string","example":"Kglectronics"},
+            "business_type":{"type":"string","example":"individual"},
+            "verification_status":{"type":"string","example":"active"},
+            "preferred_listing_categories":{
+                "type":"array",
+                "items":{
+                    "type":"string"
+                    },
+                "example": [
+                    "electronics",
+                    "furniture",
+                    "vehicles"
+                ]
+            },
+            "payout_phone":{"type":"string","example":"+250780123456"},
+            "payout_bank_name":{"type":"string","example":"BPR"},
+            "payout_account_number":{"type":"string","example":"12345934014341"},
+        }
+    },
+    "UpdateLessorProfileStatus":{
+        "type":"object",
+        "required":["status"],
+        "properties":{
+            "status":{"type":"string","example":"active"}
+        }
+    },
+    "UpdateLessorProfile":{
+        "type":"object",
+        "properties":{
+            "display_name":{"type":"string","example":"Kglectronics"},
+            "business_type":{"type":"string","example":"individual"},
+            "verification_status":{"type":"string","example":"active"},
+            "preferred_listing_categories":{
+                "type":"array",
+                "items":{
+                    "type":"string"
+                    },
+                "example": [
+                    "electronics",
+                    "furniture",
+                    "vehicles"
+                ]
+            },
+            "payout_phone":{"type":"string","example":"+250780123456"},
+            "payout_bank_name":{"type":"string","example":"BPR"},
+            "payout_account_number":{"type":"string","example":"12345934014341"}
+        }
+    }
+}
